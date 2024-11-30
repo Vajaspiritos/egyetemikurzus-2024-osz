@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Enviroment.cs" />
+    <Compile Remove="Functions.cs" />
+    <Compile Remove="PPO.cs" />
+    <Compile Remove="Step.cs" />
+    <Compile Remove="Tests.cs" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,11 @@
-﻿using System;
+﻿using AI_Practice.Functions;
+using AI_Practice.Functions.ActivationFunctions;
+using AI_Practice.Functions.LossFunctions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +14,19 @@ namespace AI_Practice
 {
     public class Network
     {
-        readonly float LearningRate;
+        public readonly float LearningRate;
         private bool Network_is_built_flag;
         public Func<float[], float[], float[]> LossFunction;
         public Func<float[], float[], float[]> DLossFunction;
         public List<float[]> LOG = new List<float[]>();
         private List<Plan> Network_Plan = new List<Plan>();
-        private readonly List<Data> Dataset;
+        public readonly List<Data> Dataset;
         public Layer[] Layers;
         public Layer[] Deltas;
         public bool Monitoring = false;
         public float MonitorSize = 100;
 
-        public Network(float learning_rate, Func<float[], float[], float[]> lossFunction, Func<float[], float[], float[]> dLossFunction, List<Data> dataset)
+         public Network(float learning_rate, Func<float[], float[], float[]> lossFunction, Func<float[], float[], float[]> dLossFunction, List<Data> dataset)
         {
 
             LearningRate = Math.Max(0f, learning_rate);
@@ -86,47 +90,56 @@ namespace AI_Practice
 
         public void Print() {
 
+            Console.WriteLine(GetModell());
+           
 
+
+        }
+
+        public string GetModell(bool with_derivative = true) {
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Layers.Length; i++)
             {
-                Console.WriteLine((i + 1) + ". Layer:");
+                
+                sb.AppendLine((i + 1) + ". Layer:");
                 for (int j = 0; j < Layers[i].NeuronCount(); j++)
                 {
 
-                    Console.WriteLine("     " + (j + 1) + ". Neuron:");
-                    Console.WriteLine("         Value:" + Layers[i][j].Value);
-                    Console.WriteLine("         Bias:" + Layers[i][j].Bias);
-                    Console.WriteLine("         Weights:");
+                    sb.AppendLine("     " + (j + 1) + ". Neuron:");
+                    sb.AppendLine("         Value:" + Layers[i][j].Value);
+                    sb.AppendLine("         Bias:" + Layers[i][j].Bias);
+                    sb.AppendLine("         Weights:");
                     for (int k = 0; k < Layers[i][j].WeightCount(); k++)
                     {
 
-                        Console.WriteLine("               " + (k + 1) + ".Weight: " + Layers[i][j][k]);
+                        sb.AppendLine("               " + (k + 1) + ".Weight: " + Layers[i][j][k]);
 
                     }
                 }
             }
-            //return; //majd vegyem már ki mert rosszul mutatna ha benne hagynám
-            for (int i = 0; i < Deltas.Length; i++)
+            if (with_derivative)
             {
-                Console.WriteLine((i + 1) + ". Layer:");
-                for (int j = 0; j < Deltas[i].NeuronCount(); j++)
+                sb.AppendLine("Delták:");
+                for (int i = 0; i < Deltas.Length; i++)
                 {
-
-                    Console.WriteLine("     " + (j + 1) + ". Neuron:");
-                    Console.WriteLine("         Value:" + Deltas[i][j].Value);
-                    Console.WriteLine("         Bias:" + Deltas[i][j].Bias);
-                    Console.WriteLine("         Weights:");
-                    for (int k = 0; k < Deltas[i][j].WeightCount(); k++)
+                    sb.AppendLine((i + 1) + ". Layer:");
+                    for (int j = 0; j < Deltas[i].NeuronCount(); j++)
                     {
 
-                        Console.WriteLine("               " + (k + 1) + ".Weight: " + Deltas[i][j][k]);
+                        sb.AppendLine("     " + (j + 1) + ". Neuron:");
+                        sb.AppendLine("         Value:" + Deltas[i][j].Value);
+                        sb.AppendLine("         Bias:" + Deltas[i][j].Bias);
+                        sb.AppendLine("         Weights:");
+                        for (int k = 0; k < Deltas[i][j].WeightCount(); k++)
+                        {
 
+                            sb.AppendLine("               " + (k + 1) + ".Weight: " + Deltas[i][j][k]);
+
+                        }
                     }
                 }
             }
-
-
-
+            return sb.ToString();
         }
 
         public List<float[]> Train(int epoch, int batch_size = 1,bool no_clear = false) {

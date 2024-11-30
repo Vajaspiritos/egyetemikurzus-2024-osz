@@ -18,7 +18,7 @@ namespace AI_Practice
     {
 
 
-        private static Dictionary<string, CommandInterface> COMMANDS = new();
+        public static Dictionary<string, CommandInterface> COMMANDS = new();
         public static Network AI;
         static Commands() {
 
