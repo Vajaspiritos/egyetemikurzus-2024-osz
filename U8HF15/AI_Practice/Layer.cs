@@ -54,7 +54,7 @@ namespace AI_Practice
             return res;
         }
       public static Layer operator *(Layer L1, Layer L2)
-        {
+        { // a forward propagation-höz
             for (int i = 0; i < L2.NeuronCount(); i++)
             {
                 float sum = 0;
@@ -119,7 +119,7 @@ namespace AI_Practice
                 L2.Before[i].Value = derivative;
                 for (int j = 0; j < L1[i].WeightCount(); j++) {
                     L2.Before[i][j] -= L1[i].Value * L2[j].Value;
-                    //Console.WriteLine(L1[i].Value +" * "+ L2[j].Value);
+                 
                 }
                 L2.Before[i].Bias -= derivative;
             

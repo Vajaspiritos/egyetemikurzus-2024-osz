@@ -19,9 +19,9 @@ namespace AI_Practice.CommandFiles
             Network ai = Commands.AI;
 
             List<float[]> outputs = new();
-            for (int j= 0,i=0; j < ai.Dataset[0].Outputs.Count; j++){
+            for (int j= 0,i=0; j < ai.Dataset[0].Outputs.Length; j++){
 
-                float[] output = ai.Dataset.SelectMany(f => f.Outputs).Where(f => (i++)%ai.Dataset[0].Outputs.Count == j).ToArray();
+                float[] output = ai.Dataset.SelectMany(f => f.Outputs).Where(f => (i++)%ai.Dataset[0].Outputs.Length == j).ToArray();
                 outputs.Add(output);
             }
 

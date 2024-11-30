@@ -9,22 +9,14 @@ using System.Threading.Tasks;
 
 namespace AI_Practice
 {
-    public struct Data
+    public record Data
     {
        
-        readonly private float[] _Inputs;  
-        readonly private float[] _Outputs;
-
-       // load XOR_4x4.json
-        public IReadOnlyList<float> Inputs => _Inputs;
-        
-        public IReadOnlyList<float> Outputs => _Outputs;
-
-
-       
+        readonly public float[] Inputs;  
+        readonly public float[] Outputs;     
         public Data(float[] inputs, float[] outputs) { 
-        this._Inputs = (float[])inputs.Clone();
-        this._Outputs = (float[])outputs.Clone();
+        this.Inputs = (float[])inputs.Clone();
+        this.Outputs = (float[])outputs.Clone();
         
         }
     }

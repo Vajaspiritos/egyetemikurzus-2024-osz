@@ -60,33 +60,6 @@ namespace AI_Practice
 
         }
 
-
-        public static bool operator ==(Neuron N1, Neuron N2) {
-            if (N1 is null || N2 is null) throw new Exception("N1 vagy N2 null");
-            if (N1.WeightCount() != N2.WeightCount()) throw new Exception("Comparing wrong Neurons. N1 != N2");
-
-            if (N1.Value != N2.Value) throw new Exception("N1 és N2 Value-ja nem eggyezik");
-            if (N1.Bias != N2.Bias) throw new Exception($"N1 és N2 Bias-a nem eggyezik. N1.bias: {N1.Bias}  N2.bias:{N2.Bias}");
-            for (int i = 0; i < N1.WeightCount(); i++) {
-
-                if (N1[i] != N2[i]) throw new Exception($"N1 és N2 {i}. weight-je (0-től indexelve) nem eggyezik");
-            }
-
-            return true;
-        }
-
-        public override string ToString() {
-
-            string res = $"Value: {this.Value} \nBias: {this.Bias}\nWeights:\n";
-            for (int i = 0; i < WeightCount(); i++) {
-                res += $"      {i+1}.weight: {this[i]}";
-            }
-            return res;
-        }
-        public static bool operator !=(Neuron N1, Neuron N2) { 
-        return !(N1 == N2);
-        }
-
         private float validate(float value) {
 
             if (float.IsInfinity(value)) throw new NotFiniteNumberException("Tries to set as Infinite");
@@ -97,12 +70,13 @@ namespace AI_Practice
         
         }
 
+
         public Neuron(int Num_of_weights, bool initialize_with_zero = false)
         {
             try
             {
                 if (Num_of_weights < 0) throw new Exception("Invaliad weight count given");
-                //this.Value = initialize_with_zero ? 0 : (float)Random.Shared.NextDouble()*2-1;
+                
                 this.Bias = initialize_with_zero ? 0 : (float)Random.Shared.NextDouble()*2-1;
                 this._weights = new float[Num_of_weights];
                 for (int i = 0; i < Num_of_weights; i++)
@@ -136,6 +110,22 @@ namespace AI_Practice
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        // Ha szakmai gyakornokot keresnek, nekem jó lenne eggyet már találnom....
+        // AD over
     }
 }
 

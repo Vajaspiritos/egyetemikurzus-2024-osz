@@ -14,17 +14,17 @@ namespace AI_Practice
 {
     public class Network
     {
-        public readonly float LearningRate;
-        private bool Network_is_built_flag;
-        public Func<float[], float[], float[]> LossFunction;
-        public Func<float[], float[], float[]> DLossFunction;
-        public List<float[]> LOG = new List<float[]>();
-        private List<Plan> Network_Plan = new List<Plan>();
-        public readonly List<Data> Dataset;
-        public Layer[] Layers;
-        public Layer[] Deltas;
-        public bool Monitoring = false;
-        public float MonitorSize = 100;
+        public readonly float                   LearningRate;
+        private bool                            Network_is_built_flag;
+        public Func<float[], float[], float[]>  LossFunction;
+        public Func<float[], float[], float[]>  DLossFunction;
+        public List<float[]>                    LOG                     = new List<float[]>();
+        private List<Plan>                      Network_Plan            = new List<Plan>();
+        public readonly List<Data>              Dataset;
+        public Layer[]                          Layers;
+        public Layer[]                          Deltas;
+        public bool                             Monitoring              = false;
+        public float                            MonitorSize             = 100;
 
          public Network(float learning_rate, Func<float[], float[], float[]> lossFunction, Func<float[], float[], float[]> dLossFunction, List<Data> dataset)
         {
@@ -35,12 +35,15 @@ namespace AI_Practice
             Dataset = dataset;
         }
 
-        public void Add(int Number_of_Neurons, Func<float, float> Function, Func<float, float> DFunction) {
+
+        public void Add(int Number_of_Neurons, Func<float, float> Function, Func<float, float> DFunction) { 
+            //hozzáadja a Layer tervet az eddigiekhez
             if (Network_is_built_flag) throw new Exception("Network is already built");
             Network_Plan.Add(new Plan(Number_of_Neurons, Function,DFunction));
         }
 
         public void Build() {
+            //A terv szerint összerakja az Ai-t és feltölti  random értékekkel
             if (Network_is_built_flag) throw new Exception("Network is already built");
             Layers = new Layer[Network_Plan.Count];
             Deltas = new Layer[Network_Plan.Count];
@@ -82,7 +85,7 @@ namespace AI_Practice
         }
 
         public float[] Test(float[] input) {
-
+            
             Forward(input);
             return Layers[Layers.Length - 1].Fetch();
         
@@ -210,9 +213,9 @@ namespace AI_Practice
 
             for (int k = 0; k < Layers.Length; k++)
             {
-                //Print();
+                
                 Layers[k] = Layers[k] + (Deltas[k] * this.LearningRate);
-                // Print();
+                
 
             }
             if (!no_clear)
