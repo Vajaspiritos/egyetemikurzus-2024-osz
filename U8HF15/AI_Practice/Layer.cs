@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AI_Practice
 {
-    internal class Layer
+    public class Layer
     {
 
         public readonly Func<float,float> Activation_Function;

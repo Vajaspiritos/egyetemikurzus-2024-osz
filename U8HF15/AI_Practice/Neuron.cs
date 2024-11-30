@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AI_Practice
 {
     
-    internal class Neuron
+    public class Neuron
     {
         private float _value;
         private float _bias;

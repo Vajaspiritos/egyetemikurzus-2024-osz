@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AI_Practice
 {
-    internal class Network
+    public class Network
     {
         readonly float LearningRate;
         private bool Network_is_built_flag;
         public Func<float[], float[], float[]> LossFunction;
         public Func<float[], float[], float[]> DLossFunction;
+        public List<float[]> LOG = new List<float[]>();
         private List<Plan> Network_Plan = new List<Plan>();
         private readonly List<Data> Dataset;
         public Layer[] Layers;
         public Layer[] Deltas;
         public bool Monitoring = false;
+        public float MonitorSize = 100;
 
         public Network(float learning_rate, Func<float[], float[], float[]> lossFunction, Func<float[], float[], float[]> dLossFunction, List<Data> dataset)
         {
@@ -132,12 +135,12 @@ namespace AI_Practice
                 float max = 0f;
                 for (int j = 0; j < Dataset.Count; j++) {
 
-                    Forward(Dataset[j].Inputs);
+                    Forward((float[])Dataset[j].Inputs);
                     float[] res = Layers[Layers.Length - 1].Fetch();
 
-                    if (max < LossFunction(res, Dataset[j].Outputs).Max()) max = LossFunction(res, Dataset[j].Outputs).Max();
+                    if (max < LossFunction(res, (float[])Dataset[j].Outputs).Max()) max = LossFunction(res, (float[])Dataset[j].Outputs).Max();
                    
-                    res = DLossFunction(res, Dataset[j].Outputs);
+                    res = DLossFunction(res, (float[])Dataset[j].Outputs);
                     Backward(res);
                     
                     if ((j + 1) % batch_size == 0)
@@ -151,12 +154,45 @@ namespace AI_Practice
 
                 }
                 Loss.Add([max]);
-                if (this.Monitoring) Commands.Log_for_Monitor(this);
+                if (this.Monitoring) Log_for_Monitor();
 
             }
             return Loss;
         }
 
+        public void Log_for_Monitor()
+        {
+            try
+            {
+                StreamWriter sw = new StreamWriter("Log_Monitor.AIPractice", true);
+
+                for (int y = 0; y < MonitorSize; y++)
+                {
+
+                    for (int x = 0; x < MonitorSize; x++)
+                    {
+                        float step = 1f / (float)MonitorSize;
+                        float v1 = x * step;
+                        float v2 = 1f - (y * step);
+                        float res = Test([v1, v2])[0];
+                        //feltételezzük a szánt output [-1,1] közé esik
+                        int value = Math.Clamp((int)(res * 255), -255, 255);
+                        sw.Write(value);
+                        if (x != MonitorSize) sw.Write(",");
+
+                    }
+                    if (y != MonitorSize) sw.Write('\n');
+
+                }
+                sw.WriteLine(";");
+                sw.Close();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to monitor AI because: " + e.Message);
+            }
+
+        }
         public void ApplyDeltas(bool no_clear=false) {
 
             for (int k = 0; k < Layers.Length; k++)
